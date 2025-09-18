@@ -5,7 +5,7 @@ dotenv.config();
 
 //variavel que guarda a conexão com o MySQL
 //mysql.createConnection função do mysql2 que cria a conexão
-const connection = mysql.createConnection({
+const connection = mysql2.createConnection({
     //dados do banco vindo do .env
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -21,5 +21,19 @@ connection.connect(function(err){
     }
 })
 
+const app = express()
 
+app.get("/users", function(req, res){
+    connection.query("SELECT * FROM users" + function(err, results){
+        if(err){
+            res.send("erro ao buscar usuario: " + err.message)
+        } else {
+            res.json(results)
+        }
+    })
+})
+
+app.listen(3000, function(){
+    console.log("servidor rodando na porta 3000")
+})
 
